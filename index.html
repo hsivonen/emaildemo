@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Email demo</title>
+        <meta content="width=device-width, initial-scale=1" name="viewport">
+    </head>
+    <body>
+        <input type="text" size="200" style="width: 95%;">
+        <dl>
+            <dt>Input</dt>
+            <dd id="emailinput"><i>empty</i></dd>
+            <dt>Submittable</dt>
+            <dd id="emailsubmittable"><i>not valid</i></dd>
+            <dt>Presentable (intentionally no URL-bar-style spoof check)</dt>
+            <dd id="emailpresentable"><i>not valid</i></dd>
+        </dl>
+        <script type="module">
+            import initSync, { email } from './emaildemo.js';
+            await initSync();
+
+            function checkEmail(val) {
+                if (!val.isWellFormed()) {
+                    return undefined;
+                }
+                return email(val);
+            }
+
+            function changed() {
+                let val = document.getElementsByTagName("input")[0].value;
+                if (val == "") {
+                    document.getElementById("emailinput").innerHTML = "<i>empty</i>";
+                    document.getElementById("emailsubmittable").innerHTML = "<i>not valid</i>";
+                    document.getElementById("emailpresentable").innerHTML = "<i>not valid</i>";
+                    return;
+                }
+                document.getElementById("emailinput").textContent = val;
+                let pair = checkEmail(val);
+                if (pair) {
+                    let items = pair.split("\u0000");
+                    document.getElementById("emailsubmittable").textContent = items[1];
+                    document.getElementById("emailpresentable").textContent = items[0];
+                } else {
+                    document.getElementById("emailsubmittable").innerHTML = "<i>not valid</i>";
+                    document.getElementById("emailpresentable").innerHTML = "<i>not valid</i>";
+                }
+            }
+            document.getElementsByTagName("input")[0].oninput = changed;
+            document.getElementsByTagName("input")[0].onkeyup = changed;
+            changed();
+        </script>
+<!-- Any copyright is dedicated to the Public Domain.
+   - http://creativecommons.org/publicdomain/zero/1.0/ -->
+    </body>
+</html>

@@ -1,0 +1,19 @@
+[package]
+name = "emaildemo"
+version = "0.1.0"
+edition = "2021"
+authors = ["Henri Sivonen <hsivonen@hsivonen.fi>"]
+license = "CC0-1.0"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+icu_normalizer = "1.5.0"
+idna = "1.0.2"
+wasm-bindgen = "0.2.93"
+
+[profile.release]
+opt-level = "z"
+lto = true
+strip = true
